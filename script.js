@@ -3,17 +3,18 @@ let qiPerClick = 1;
 let qiPerSecond = 0;
 let rebirthBonus = 0;
 
-// Costs for upgrades
-const bodyUpgradeCosts = {
-    hands: 10,
-    legs: 50,
-    torso: 100
+// Costs for cultivation upgrades
+const cultivationUpgradeCosts = {
+    organ: 10,
+    skeleton: 50,
+    muscle: 100,
+    skin: 200
 };
 
 const buildingUpgradeCosts = {
-    temple: 100,
-    tower: 500,
-    garden: 1000
+    array: 100,
+    extractor: 500,
+    engine: 1000
 };
 
 // Click to generate Qi
@@ -22,58 +23,37 @@ function generateQi() {
     updateQiDisplay();
 }
 
-// Body Upgrades: Increases Qi gathered per click
+// Cultivation Upgrades
 function upgradeBody(part) {
-    if (qiAmount >= bodyUpgradeCosts[part]) {
-        switch (part) {
-            case 'hands':
-                qiPerClick += 1;
-                qiAmount -= bodyUpgradeCosts.hands;
-                bodyUpgradeCosts.hands *= 2;
-                document.getElementById('upgradeHands').title = `Cost: ${bodyUpgradeCosts.hands} Qi, Increases Qi per click by 1`;
-                break;
-            case 'legs':
-                qiPerClick += 2;
-                qiAmount -= bodyUpgradeCosts.legs;
-                bodyUpgradeCosts.legs *= 2;
-                document.getElementById('upgradeLegs').title = `Cost: ${bodyUpgradeCosts.legs} Qi, Increases Qi per click by 2`;
-                break;
-            case 'torso':
-                qiPerClick += 3;
-                qiAmount -= bodyUpgradeCosts.torso;
-                bodyUpgradeCosts.torso *= 2;
-                document.getElementById('upgradeTorso').title = `Cost: ${bodyUpgradeCosts.torso} Qi, Increases Qi per click by 3`;
-                break;
-        }
+    if (qiAmount >= cultivationUpgradeCosts[part]) {
+        qiAmount -= cultivationUpgradeCosts[part];
+        // Define what each upgrade increases
+        // Adjust these values as per the final game mechanics
+        cultivationUpgradeCosts[part] *= 2;
+        document.getElementById(`upgrade${capitalize(part)}`).title = `Cost: ${cultivationUpgradeCosts[part]} Qi, Increases ???`;
         updateQiDisplay();
     } else {
         alert("Not enough Qi for this upgrade!");
     }
 }
 
-// Building Upgrades: Increases Qi per second
+// Building Upgrades
 function upgradeBuilding(building) {
     if (qiAmount >= buildingUpgradeCosts[building]) {
         switch (building) {
-            case 'temple':
+            case 'array':
                 qiPerSecond += 5;
-                qiAmount -= buildingUpgradeCosts.temple;
-                buildingUpgradeCosts.temple *= 2;
-                document.getElementById('upgradeTemple').title = `Cost: ${buildingUpgradeCosts.temple} Qi, Increases Qi per second by 5`;
                 break;
-            case 'tower':
+            case 'extractor':
                 qiPerSecond += 10;
-                qiAmount -= buildingUpgradeCosts.tower;
-                buildingUpgradeCosts.tower *= 2;
-                document.getElementById('upgradeTower').title = `Cost: ${buildingUpgradeCosts.tower} Qi, Increases Qi per second by 10`;
                 break;
-            case 'garden':
+            case 'engine':
                 qiPerSecond += 15;
-                qiAmount -= buildingUpgradeCosts.garden;
-                buildingUpgradeCosts.garden *= 2;
-                document.getElementById('upgradeGarden').title = `Cost: ${buildingUpgradeCosts.garden} Qi, Increases Qi per second by 15`;
                 break;
         }
+        qiAmount -= buildingUpgradeCosts[building];
+        buildingUpgradeCosts[building] *= 2;
+        document.getElementById(`upgrade${capitalize(building)}`).title = `Cost: ${buildingUpgradeCosts[building]} Qi, Increases Qi per second by ${building === 'array' ? 5 : building === 'extractor' ? 10 : 15}`;
         updateQiDisplay();
     } else {
         alert("Not enough Qi for this upgrade!");
@@ -120,3 +100,15 @@ function loadProgress() {
     rebirthBonus = saveData.rebirthBonus;
     updateQiDisplay();
 }
+
+// Utility function to capitalize strings for dynamic references
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Start the Qi per second generator
+setInterval(() => {
+    qiAmount += qiPerSecond;
+    updateQiDisplay();
+}, 1000);
+

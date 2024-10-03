@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qi Clicker Game</title>
+    <title>Cultive Click</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <!-- Left: Body Upgrades -->
+        <!-- Left: Cultivation Upgrades -->
         <div class="section left">
-            <h2>Body Upgrades</h2>
-            <button id="upgradeHands" onclick="upgradeBody('hands')" title="Cost: 10 Qi, Increases Qi per click by 1">Upgrade Hands</button>
-            <button id="upgradeLegs" onclick="upgradeBody('legs')" title="Cost: 50 Qi, Increases Qi per click by 2">Upgrade Legs</button>
-            <button id="upgradeTorso" onclick="upgradeBody('torso')" title="Cost: 100 Qi, Increases Qi per click by 3">Upgrade Torso</button>
+            <h2>Cultivation</h2>
+            <button id="upgradeOrgan" onclick="upgradeBody('organ')" title="Cost: 10 Qi, Increases ???">Infuse Organ</button>
+            <button id="upgradeSkeleton" onclick="upgradeBody('skeleton')" title="Cost: 50 Qi, Increases ???">Infuse Skeleton</button>
+            <button id="upgradeMuscle" onclick="upgradeBody('muscle')" title="Cost: 100 Qi, Increases ???">Infuse Muscle</button>
+            <button id="upgradeSkin" onclick="upgradeBody('skin')" title="Cost: 200 Qi, Increases ???">Infuse Skin</button>
+
+            <!-- Save and Load Progress -->
+            <h3>Save/Load Progress</h3>
+            <textarea id="saveText" rows="4" cols="30" placeholder="Copy or paste your saved progress here..."></textarea>
+            <button id="saveGame" onclick="saveProgress()">Save Game</button>
+            <button id="loadGame" onclick="loadProgress()">Load Game</button>
         </div>
 
         <!-- Middle: Qi Display and Click Button -->
@@ -22,7 +29,7 @@
             <h3>Qi per Second: <span id="qiPerSecond">0</span></h3>
             <h3>Qi per Click: <span id="qiPerClick">1</span></h3>
 
-            <!-- Updated Yin Yang Button -->
+            <!-- Centered Yin Yang Button -->
             <div class="circle" onclick="generateQi()">
                 <div align="center">
                     <div class="yin"></div>
@@ -40,21 +47,15 @@
             </div>
 
             <!-- Rebirth with Hover Tooltip -->
-            <button id="rebirth" onclick="rebirth()" title="Rebirth to gain a bonus and reset Qi">Rebirth</button>
+            <button id="rebirth" onclick="rebirth()" title="Cost: 1000 Qi, Rewards additional Qi per click after rebirth">Rebirth</button>
         </div>
 
         <!-- Right: Building Upgrades -->
         <div class="section right">
             <h2>Building Upgrades</h2>
-            <button id="upgradeTemple" onclick="upgradeBuilding('temple')" title="Cost: 100 Qi, Increases Qi per second by 5">Upgrade Temple</button>
-            <button id="upgradeTower" onclick="upgradeBuilding('tower')" title="Cost: 500 Qi, Increases Qi per second by 10">Upgrade Tower</button>
-            <button id="upgradeGarden" onclick="upgradeBuilding('garden')" title="Cost: 1000 Qi, Increases Qi per second by 15">Upgrade Garden</button>
-
-            <!-- Save and Load Progress -->
-            <h3>Save/Load Progress</h3>
-            <textarea id="saveText" rows="4" cols="30" placeholder="Copy or paste your saved progress here..."></textarea>
-            <button id="saveGame" onclick="saveProgress()">Save Game</button>
-            <button id="loadGame" onclick="loadProgress()">Load Game</button>
+            <button id="upgradeArray" onclick="upgradeBuilding('array')" title="Cost: 100 Qi, Increases Qi per second by 5">Qi Gathering Array</button>
+            <button id="upgradeExtractor" onclick="upgradeBuilding('extractor')" title="Cost: 500 Qi, Increases Qi per second by 10">Qi Extractor</button>
+            <button id="upgradeEngine" onclick="upgradeBuilding('engine')" title="Cost: 1000 Qi, Increases Qi per second by 15">Qi Engine</button>
         </div>
     </div>
 

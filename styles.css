@@ -49,6 +49,7 @@ textarea {
     animation: rotate 10s infinite linear;
     position: relative;
     cursor: pointer;
+    margin: 0 auto;
 }
 
 .circle .yin, .circle .yang {
@@ -112,7 +113,7 @@ textarea {
 
 /* Rebirth Hover Tooltip */
 button#rebirth:hover:after {
-    content: "Requires 1000 Qi to rebirth";
+    content: "Requires 1000 Qi to rebirth. Gain a Qi per click bonus.";
     position: absolute;
     background-color: #333;
     padding: 5px;

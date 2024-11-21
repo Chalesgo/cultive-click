@@ -7,55 +7,30 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Left: Cultivation Upgrades -->
-        <div class="section left">
-            <h2>Cultivation</h2>
-            <button id="upgradeOrgan" onclick="upgradeBody('organ')" title="Cost: 10 Qi, Increases ???">Infuse Organ</button>
-            <button id="upgradeSkeleton" onclick="upgradeBody('skeleton')" title="Cost: 50 Qi, Increases ???">Infuse Skeleton</button>
-            <button id="upgradeMuscle" onclick="upgradeBody('muscle')" title="Cost: 100 Qi, Increases ???">Infuse Muscle</button>
-            <button id="upgradeSkin" onclick="upgradeBody('skin')" title="Cost: 200 Qi, Increases ???">Infuse Skin</button>
+    <div id="container">
+        <!-- Left Section: Save/Load and Rebirth -->
+        <div id="left-section">
+            <h2>Save/Load</h2>
+            <textarea id="saveBox" rows="4" cols="30" placeholder="Save or Load progress"></textarea>
+            <button onclick="saveGame()">Save</button>
+            <button onclick="loadGame()">Load</button>
 
-            <!-- Save and Load Progress -->
-            <h3>Save/Load Progress</h3>
-            <textarea id="saveText" rows="4" cols="30" placeholder="Copy or paste your saved progress here..."></textarea>
-            <button id="saveGame" onclick="saveProgress()">Save Game</button>
-            <button id="loadGame" onclick="loadProgress()">Load Game</button>
+            <h2>Rebirth</h2>
+            <p id="rebirthCondition">Rebirth Cost: 1000 Qi</p>
+            <button id="rebirthBtn" onclick="rebirth()">Rebirth</button>
         </div>
 
-        <!-- Middle: Qi Display and Click Button -->
-        <div class="section middle">
-            <h2>Qi Amount: <span id="qiAmount">0</span></h2>
-            <h3>Qi per Second: <span id="qiPerSecond">0</span></h3>
-            <h3>Qi per Click: <span id="qiPerClick">1</span></h3>
-
-            <!-- Centered Yin Yang Button -->
-            <div class="circle" onclick="generateQi()">
-                <div align="center">
-                    <div class="yin"></div>
-                </div>
-                <div align="right">
-                    <div class="feher"></div>
-                </div>
-                <div align="center">
-                    <div class="yang"></div>
-                </div>
-                <div align="center">
-                    <div class="p-black"></div>
-                    <div class="p-white"></div>
-                </div>
-            </div>
-
-            <!-- Rebirth with Hover Tooltip -->
-            <button id="rebirth" onclick="rebirth()" title="Cost: 1000 Qi, Rewards additional Qi per click after rebirth">Rebirth</button>
+        <!-- Middle Section: Qi Display and Yin/Yang Button -->
+        <div id="middle-section">
+            <h2>Qi: <span id="qiDisplay">0</span></h2>
+            <h3>Qi per Click: <span id="qiPerClickDisplay">1</span></h3>
+            <img id="yinYang" src="asset/Yin_and_Yang_symbol.svg.png" alt="Yin Yang Symbol" />
         </div>
 
-        <!-- Right: Building Upgrades -->
-        <div class="section right">
-            <h2>Building Upgrades</h2>
-            <button id="upgradeArray" onclick="upgradeBuilding('array')" title="Cost: 100 Qi, Increases Qi per second by 5">Qi Gathering Array</button>
-            <button id="upgradeExtractor" onclick="upgradeBuilding('extractor')" title="Cost: 500 Qi, Increases Qi per second by 10">Qi Extractor</button>
-            <button id="upgradeEngine" onclick="upgradeBuilding('engine')" title="Cost: 1000 Qi, Increases Qi per second by 15">Qi Engine</button>
+        <!-- Right Section: Upgrades -->
+        <div id="right-section">
+            <h2>Upgrades</h2>
+            <ul id="upgradeList"></ul>
         </div>
     </div>
 

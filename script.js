@@ -1,114 +1,108 @@
-let qiAmount = 0;
+// Core game variables
+let qi = 0;
 let qiPerClick = 1;
-let qiPerSecond = 0;
-let rebirthBonus = 0;
+let rebirthCost = 1000;
+let fatePoints = 0;
 
-// Costs for cultivation upgrades
-const cultivationUpgradeCosts = {
-    organ: 10,
-    skeleton: 50,
-    muscle: 100,
-    skin: 200
-};
+// Upgrades
+const upgrades = [
+    { name: "Infuse Organ", cost: 10, level: 0, maxLevel: 10, multiplier: 2 },
+    { name: "Infuse Skeleton", cost: 20, level: 0, maxLevel: 10, multiplier: 3 },
+    { name: "Infuse Muscle", cost: 30, level: 0, maxLevel: 10, multiplier: 4 },
+    { name: "Infuse Skin", cost: 40, level: 0, maxLevel: 10, multiplier: 5 }
+];
 
-const buildingUpgradeCosts = {
-    array: 100,
-    extractor: 500,
-    engine: 1000
-};
+// Elements
+const yinYang = document.getElementById('yinYang');
+const qiDisplay = document.getElementById('qiDisplay');
+const qiPerClickDisplay = document.getElementById('qiPerClickDisplay');
+const upgradeList = document.getElementById('upgradeList');
 
-// Click to generate Qi
-function generateQi() {
-    qiAmount += qiPerClick + rebirthBonus;
-    updateQiDisplay();
+// Click functionality
+yinYang.addEventListener('click', () => {
+    qi += qiPerClick;
+    updateStats();
+
+    // Spin animation speed-up
+    yinYang.style.animation = 'spin 0.5s linear infinite';
+    setTimeout(() => {
+        yinYang.style.animation = 'spin 5s linear infinite';
+    }, 500);
+});
+
+// Update stats
+function updateStats() {
+    qiDisplay.textContent = qi;
+    qiPerClickDisplay.textContent = qiPerClick;
+    renderUpgrades();
 }
 
-// Cultivation Upgrades
-function upgradeBody(part) {
-    if (qiAmount >= cultivationUpgradeCosts[part]) {
-        qiAmount -= cultivationUpgradeCosts[part];
-        // Define what each upgrade increases
-        // Adjust these values as per the final game mechanics
-        cultivationUpgradeCosts[part] *= 2;
-        document.getElementById(`upgrade${capitalize(part)}`).title = `Cost: ${cultivationUpgradeCosts[part]} Qi, Increases ???`;
-        updateQiDisplay();
-    } else {
-        alert("Not enough Qi for this upgrade!");
+// Render upgrades dynamically
+function renderUpgrades() {
+    upgradeList.innerHTML = '';
+    upgrades.forEach((upgrade, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span>${upgrade.name} - Cost: ${upgrade.cost}, Level: ${upgrade.level}/${upgrade.maxLevel}</span>
+            <button 
+                ${qi < upgrade.cost || upgrade.level >= upgrade.maxLevel ? 'disabled' : ''} 
+                onclick="purchaseUpgrade(${index})">
+                Upgrade
+            </button>
+        `;
+        upgradeList.appendChild(li);
+    });
+}
+
+// Purchase an upgrade
+function purchaseUpgrade(index) {
+    const upgrade = upgrades[index];
+    if (qi >= upgrade.cost && upgrade.level < upgrade.maxLevel) {
+        qi -= upgrade.cost;
+        upgrade.level++;
+        upgrade.cost = Math.ceil(upgrade.cost * 1.5); // Cost increases by 50%
+        qiPerClick += upgrade.multiplier;
+        updateStats();
     }
 }
 
-// Building Upgrades
-function upgradeBuilding(building) {
-    if (qiAmount >= buildingUpgradeCosts[building]) {
-        switch (building) {
-            case 'array':
-                qiPerSecond += 5;
-                break;
-            case 'extractor':
-                qiPerSecond += 10;
-                break;
-            case 'engine':
-                qiPerSecond += 15;
-                break;
-        }
-        qiAmount -= buildingUpgradeCosts[building];
-        buildingUpgradeCosts[building] *= 2;
-        document.getElementById(`upgrade${capitalize(building)}`).title = `Cost: ${buildingUpgradeCosts[building]} Qi, Increases Qi per second by ${building === 'array' ? 5 : building === 'extractor' ? 10 : 15}`;
-        updateQiDisplay();
-    } else {
-        alert("Not enough Qi for this upgrade!");
-    }
-}
-
-// Rebirth: Resets Qi but gives a bonus
+// Rebirth functionality
 function rebirth() {
-    if (qiAmount >= 1000) {
-        qiAmount = 0;
+    if (qi >= rebirthCost) {
+        fatePoints += Math.floor(qi / rebirthCost); // Gain fate points based on excess Qi
+        qi = 0;
         qiPerClick = 1;
-        qiPerSecond = 0;
-        rebirthBonus += 1;
-        alert("Rebirth successful! Bonus added.");
+        upgrades.forEach(upgrade => {
+            upgrade.level = 0;
+            upgrade.cost = 10; // Reset to default cost
+        });
+        updateStats();
+        alert(`Rebirth successful! Fate Points: ${fatePoints}`);
     } else {
-        alert("You need 1000 Qi to rebirth.");
+        alert('Not enough Qi to rebirth!');
     }
-    updateQiDisplay();
 }
 
-// Update the display of Qi and other stats
-function updateQiDisplay() {
-    document.getElementById('qiAmount').textContent = qiAmount;
-    document.getElementById('qiPerClick').textContent = qiPerClick + rebirthBonus;
-    document.getElementById('qiPerSecond').textContent = qiPerSecond;
+// Save and load functionality
+function saveGame() {
+    const saveData = JSON.stringify({ qi, qiPerClick, upgrades, fatePoints });
+    document.getElementById('saveBox').value = saveData;
 }
 
-// Save and load game progress
-function saveProgress() {
-    const saveData = {
-        qiAmount: qiAmount,
-        qiPerClick: qiPerClick,
-        qiPerSecond: qiPerSecond,
-        rebirthBonus: rebirthBonus
-    };
-    document.getElementById('saveText').value = JSON.stringify(saveData);
+function loadGame() {
+    const saveData = document.getElementById('saveBox').value;
+    if (saveData) {
+        const parsedData = JSON.parse(saveData);
+        qi = parsedData.qi;
+        qiPerClick = parsedData.qiPerClick;
+        fatePoints = parsedData.fatePoints;
+        parsedData.upgrades.forEach((upgrade, index) => {
+            upgrades[index].cost = upgrade.cost;
+            upgrades[index].level = upgrade.level;
+        });
+        updateStats();
+    }
 }
 
-function loadProgress() {
-    const saveData = JSON.parse(document.getElementById('saveText').value);
-    qiAmount = saveData.qiAmount;
-    qiPerClick = saveData.qiPerClick;
-    qiPerSecond = saveData.qiPerSecond;
-    rebirthBonus = saveData.rebirthBonus;
-    updateQiDisplay();
-}
-
-// Utility function to capitalize strings for dynamic references
-function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-// Start the Qi per second generator
-setInterval(() => {
-    qiAmount += qiPerSecond;
-    updateQiDisplay();
-}, 1000);
-
+// Initialize game
+updateStats();
